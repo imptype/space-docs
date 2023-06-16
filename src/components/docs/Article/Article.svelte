@@ -13,7 +13,7 @@
 
   let hidden = true;
   onMount(() => {
-    setTimeout(() => (hidden = false), 1);
+    setTimeout(() => (hidden = false), 20);
   });
 </script>
 

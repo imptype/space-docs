@@ -62,6 +62,10 @@ const ACTIVE_PAGE = await getCollection("docs", (e => `/docs/en/${e.id.split("."
 	</head>
 
 	<body>
+        <script>
+            import * as Turbo from '@hotwired/turbo';
+            Turbo.start();
+        </script>
         <main>
             <Header currentPage={currentPage} client:idle/>
             <SideNav navTree={CONFIG.NAV_TREE} currentPage={currentPage} client:idle/>
@@ -182,6 +186,7 @@ const ACTIVE_PAGE = await getCollection("docs", (e => `/docs/en/${e.id.split("."
             <!--<Footer />-->
         </main>
 		<TeletypeContainer />
+        <script src="/other_assets/instant-page.js" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
 	</body>
 </html>
 

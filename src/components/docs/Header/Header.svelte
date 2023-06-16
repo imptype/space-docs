@@ -18,7 +18,7 @@
   import IconX from "@/components/core/Icon/IconX.svelte";
 </script>
 
-<header>
+<header  data-turbo-permanent>
     <div>
         <ul>
             <li class="only-desktop">
@@ -28,6 +28,7 @@
                 </a>
             </li>
             <li class="only-mobile" style="margin-right: -0.5rem;">
+                {#key $sideNavOpen}
                 <IconButton on:click={toggleSideNav}>
                     {#if $sideNavOpen}
                         <IconX size={24} strokeWidth={2} />
@@ -35,6 +36,7 @@
                         <IconMenu2 size={24} strokeWidth={2} />
                     {/if}
                 </IconButton>
+                {/key}
             </li>
         </ul>
     </div>

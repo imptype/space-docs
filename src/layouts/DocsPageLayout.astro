@@ -53,6 +53,10 @@ const ACTIVE_PAGE = await getCollection("docs", (e => {
 	</head>
 
 	<body>
+        <script>
+            import * as Turbo from '@hotwired/turbo';
+            Turbo.start();
+        </script>
         <Header client:load frontmatter={frontmatter} headings={headings} currentPage={currentPage} />
         <main>
             <SideNav navTree={CONFIG.NAV_TREE} currentPage={currentPage} client:load/>
@@ -62,6 +66,7 @@ const ACTIVE_PAGE = await getCollection("docs", (e => {
             <!--<Footer />-->
         </main>
 		<TeletypeContainer />
+        <script src="/other_assets/instant-page.js" type="module" integrity="sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z"></script>
 	</body>
 </html>
 

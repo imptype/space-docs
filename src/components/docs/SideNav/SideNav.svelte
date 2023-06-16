@@ -45,9 +45,6 @@
 
   setContext("currentPage", currentPage);
 
-  let op = false;
-  $: op = $sideNavOpen;
-
   // HANDLERS
   function onBeginPeek() {
     if ($sideNavOpen || innerWidth < 768) return;
@@ -77,14 +74,18 @@
   onMount(() => {
     updateBodyClass();
     //if (innerWidth < 768 && JSON.parse(localStorage.getItem("sideNavOpen") || false)) sideNavOpen.set(false); // TODO: FIX
+    if (innerWidth < 768) {
+      sideNavOpen.set(false);
+      updateBodyClass();
+    }
     if (document) {
-        // Quick fix to close after link click
-        document.addEventListener("click", (e) => {
-            if (innerWidth >= 768) return;
-            if (!(e.target instanceof HTMLAnchorElement) && e.target.closest("a") === null) return;
-            sideNavOpen.set(false);
-            updateBodyClass();
-        });
+      // Quick fix to close after link click
+      document.addEventListener("click", (e) => {
+        if (innerWidth >= 768) return;
+        if (!(e.target instanceof HTMLAnchorElement) && e.target.closest("a") === null) return;
+        sideNavOpen.set(false);
+        updateBodyClass();
+      });
       //if (innerWidth > 768 && !localStorage.getItem("sideNavOpen")) sideNavOpen.set(true); // TODO: FIX
       //if (innerWidth < 768 && !JSON.parse(localStorage.getItem("sideNavOpen") || "false")) sideNavOpen.set(false); // TODO: FIX
       updateBodyClass();
@@ -99,83 +100,93 @@
   class:active={!$sideNavOpen}
   on:mouseenter={onBeginPeek}
   on:mouseleave={onEndPeek} />
-<aside class:open={$sideNavOpen} class:peeking={$sideNavPeeking} on:mouseleave={onEndNavHover}>
-    {#if ($sideNavOpen) || ($sideNavPeeking)}
-  <nav
-  transition:fly={{
-      duration: 400,
-      easing: quintOut,
-      x: innerWidth >= 768 ? -100 : 0,
-      y: innerWidth < 768 ? 100 : 0
-    }}
-    >
-    <header class="only-desktop">
-      <a href="/docs" class="docs-logo">
-        <AstroLogo size={28} />
-        <span>Space Docs</span>
-      </a>
-    </header>
+<aside
+  id="sidenav"
+  data-turbo-permanent
+  class:open={$sideNavOpen}
+  class:peeking={$sideNavPeeking}
+  on:mouseleave={onEndNavHover}>
+  {#key ($sideNavOpen)}
+    <nav
+      in:fly={{
+        duration: 220,
+        easing: quintOut,
+        x: innerWidth >= 768 ? -100 : 0,
+        y: innerWidth < 768 ? 100 : 0
+      }}
+      out:fly={{
+        duration: 220,
+        easing: quintOut,
+        x: innerWidth >= 768 ? -100 : 0,
+        y: innerWidth < 768 ? 100 : 0
+      }}>
+      <header class="only-desktop">
+        <a href="/docs" class="docs-logo">
+          <AstroLogo size={28} />
+          <span>Space Docs</span>
+        </a>
+      </header>
 
-    <div class="nav-tree">
-      <ul>
-        <CollapsibleGroup>
-          <NavSection
-            depth={0}
-            navItem={navTree.subItems[0]}
-            open={currentPage.includes("/learn")}
-            animated={false}>
-            <svelte:fragment slot="icon">
-              <IconBook2
-                size={24}
-                strokeWidth={2}
-                style="currentColor"
-                color="hsl(var(--color-base-purple), 50%)" />
-            </svelte:fragment>
-          </NavSection>
-          <NavSection
-            depth={0}
-            navItem={navTree.subItems[1]}
-            open={currentPage.includes("/build")}
-            animated={false}>
-            <svelte:fragment slot="icon">
-              <IconHammer
-                size={24}
-                strokeWidth={2}
-                style="currentColor"
-                color="hsl(var(--color-base-blue-dark), 50%)" />
-            </svelte:fragment>
-          </NavSection>
-          <NavSection
-            depth={0}
-            navItem={navTree.subItems[2]}
-            open={currentPage.includes("/use")}
-            animated={false}>
-            <svelte:fragment slot="icon">
-              <IconBolt
-                size={24}
-                strokeWidth={2}
-                style="currentColor"
-                color="hsl(var(--color-base-yellow), 50%)" />
-            </svelte:fragment>
-          </NavSection>
-          <NavSection
-            depth={0}
-            navItem={navTree.subItems[3]}
-            open={currentPage.includes("/publish")}
-            animated={false}>
-            <svelte:fragment slot="icon">
-              <IconRocket
-                size={24}
-                strokeWidth={2}
-                style="currentColor"
-                color="hsl(var(--color-base-green), 40%)" />
-            </svelte:fragment>
-          </NavSection>
-        </CollapsibleGroup>
-      </ul>
-    </div>
-  </nav>
-  {/if}
+      <div class="nav-tree">
+        <ul>
+          <CollapsibleGroup>
+            <NavSection
+              depth={0}
+              navItem={navTree.subItems[0]}
+              open={currentPage.includes("/learn")}
+              animated={false}>
+              <svelte:fragment slot="icon">
+                <IconBook2
+                  size={24}
+                  strokeWidth={2}
+                  style="currentColor"
+                  color="hsl(var(--color-base-purple), 50%)" />
+              </svelte:fragment>
+            </NavSection>
+            <NavSection
+              depth={0}
+              navItem={navTree.subItems[1]}
+              open={currentPage.includes("/build")}
+              animated={false}>
+              <svelte:fragment slot="icon">
+                <IconHammer
+                  size={24}
+                  strokeWidth={2}
+                  style="currentColor"
+                  color="hsl(var(--color-base-blue-dark), 50%)" />
+              </svelte:fragment>
+            </NavSection>
+            <NavSection
+              depth={0}
+              navItem={navTree.subItems[2]}
+              open={currentPage.includes("/use")}
+              animated={false}>
+              <svelte:fragment slot="icon">
+                <IconBolt
+                  size={24}
+                  strokeWidth={2}
+                  style="currentColor"
+                  color="hsl(var(--color-base-yellow), 50%)" />
+              </svelte:fragment>
+            </NavSection>
+            <NavSection
+              depth={0}
+              navItem={navTree.subItems[3]}
+              open={currentPage.includes("/publish")}
+              animated={false}>
+              <svelte:fragment slot="icon">
+                <IconRocket
+                  size={24}
+                  strokeWidth={2}
+                  style="currentColor"
+                  color="hsl(var(--color-base-green), 40%)" />
+              </svelte:fragment>
+            </NavSection>
+          </CollapsibleGroup>
+        </ul>
+      </div>
+    </nav>
+  {/key}
 
   <div class="nav-toggle only-desktop">
     <IconButton on:click={toggleSideNav}>
